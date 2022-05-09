@@ -37,13 +37,13 @@ const Table = () =>{
                   {tableData.map((el, index) => {
                     return (
                       <tr>
-                        <td className='px-6 py-4  bg-yellow-200 shadow overflow-hidden border-b border-black-700 sm:rounded-lg font-mono'>
+                        <td className='px-6 py-4  bg-yellow-200 shadow overflow-hidden border-b border-black-700 sm:rounded-lg '>
                           {el.id}
                         </td>
-                        <td className='px-6 py-4 bg-blue-200 shadow overflow-hidden border-b border-gray-700 sm:rounded-sm font-mono'>
+                        <td className='px-6 py-4 bg-blue-200 shadow overflow-hidden border-b border-gray-700 sm:rounded-sm '>
                           {el.title}
                         </td>
-                        <td className='px-6 py-4 bg-green-200 shadow overflow-hidden border-b border-gray-700 sm:rounded-sm font-mono'>
+                        <td className='px-6 py-4 bg-green-200 shadow overflow-hidden border-b border-gray-700 sm:rounded-sm '>
                           {el.body}
                         </td>
                       </tr>
