@@ -1,8 +1,8 @@
 import { ActionTypes } from '../constants/action-types'
 
-export const setPosts = (products) => {
+export const setPosts = (posts) => {
   return {
     type: ActionTypes.SET_PRODUCTS,
-    payload: products,
+    payload: posts,
   }
 }
