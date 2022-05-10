@@ -1,18 +1,19 @@
-import { useEffect, useState } from "react"
-import { getAllPosts } from "../services/post.service";
+import { useState } from "react"
+import Modal from "./Modal";
 
-const Table = () =>{ 
-    const [tableData, setTableData] = useState([]);
-
-    const fetchData = async () => {
-        const res = await getAllPosts();
-        debugger
-        setTableData(res.data);
+const Table = (props) =>{ 
+    //1.create a modal component
+    //2.modal component should display el.id el.title el.body
+    //3. delete a row from table with async call
+    //4. update component
+    const [showModal, setShowModal] = useState(false);
+    const [selectedRow, setSelectedRow] = useState({})
+    const handleOpenModal = (value) => {
+        setShowModal(!showModal);
+        setSelectedRow(value);
     }
-
-    useEffect(()=>{
-        fetchData()
-    },[])
+  const {data, handleDeleteRow} = props
+    if(!data) return <div>no data</div>
     return (
       <div className='mt-2 flex flex-col'>
         <div className='-my-2 overflow-x-auto -mx-4 sm:-mx-6 lg:-mx-8'>
@@ -31,12 +32,14 @@ const Table = () =>{
                     <th className='px-6 py-3  text-lg font-medium text-black-500 uppercase tracking-wider'>
                       Body
                     </th>
+                    <th>edit</th>
+                    <th>delete</th>
                   </tr>
                 </thead>
                 <tbody className='bg-white divide-y divide-gray-900'>
-                  {tableData.map((el, index) => {
+                  {data.map((el, index) => {
                     return (
-                      <tr>
+                      <tr key={index} onClick={() => {}}>
                         <td className='px-6 py-4  bg-yellow-200 shadow overflow-hidden border-b border-black-700 sm:rounded-lg '>
                           {el.id}
                         </td>
@@ -46,6 +49,8 @@ const Table = () =>{
                         <td className='px-6 py-4 bg-green-200 shadow overflow-hidden border-b border-gray-700 sm:rounded-sm '>
                           {el.body}
                         </td>
+                        <td onClick={()=> handleOpenModal(el)}>edit</td>
+                        <td onClick={() =>handleDeleteRow(el.id)}>delete</td>
                       </tr>
                     )
                   })}
@@ -54,6 +59,7 @@ const Table = () =>{
             </div>
           </div>
         </div>
+        {showModal && <Modal data={selectedRow}/>}
       </div>
     )
 }

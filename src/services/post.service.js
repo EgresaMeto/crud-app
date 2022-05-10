@@ -12,3 +12,7 @@ export const getAllPosts = async () => {
     console.log(error)
   }
 }
+
+export const deleteRow = async (id) => {
+ 
+}
