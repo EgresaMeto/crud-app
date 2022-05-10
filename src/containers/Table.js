@@ -1,18 +1,6 @@
-import { useState } from "react"
-import Modal from "./Modal";
-
 const Table = (props) =>{ 
-    //1.create a modal component
-    //2.modal component should display el.id el.title el.body
-    //3. delete a row from table with async call
-    //4. update component
-    const [showModal, setShowModal] = useState(false);
-    const [selectedRow, setSelectedRow] = useState({})
-    const handleOpenModal = (value) => {
-        setShowModal(!showModal);
-        setSelectedRow(value);
-    }
-  const {data, handleDeleteRow} = props
+    const {data, handleDelete, handleOpenModal} = props;
+
     if(!data) return <div>no data</div>
     return (
       <div className='mt-2 flex flex-col'>
@@ -21,19 +9,15 @@ const Table = (props) =>{
             <div className='shadow overflow-hidden border-b border-gray-200 sm:rounded-lg'></div>
             <div>
               <table className='min-w-full divide-y divide-c-900'>
-                <thead className='bg-gray-200'>
+              <thead className='bg-gray-200'>
                   <tr>
-                    <th className='px-6 py-3  text-lg font-medium text-black-500 uppercase tracking-wider '>
-                      Id
-                    </th>
-                    <th className='px-6 py-3  text-lg font-medium text-black-500 uppercase tracking-wider'>
-                      Title
-                    </th>
-                    <th className='px-6 py-3  text-lg font-medium text-black-500 uppercase tracking-wider'>
-                      Body
-                    </th>
-                    <th>edit</th>
-                    <th>delete</th>
+                      {["Id", "Title", "Body", "Edit", "Delete"].map((el)=>{
+                          return(
+                            <th className='px-6 py-3  text-lg font-medium text-black-500 uppercase tracking-wider '>
+                                {el}
+                          </th>
+                          )
+                      })}
                   </tr>
                 </thead>
                 <tbody className='bg-white divide-y divide-gray-900'>
@@ -49,8 +33,8 @@ const Table = (props) =>{
                         <td className='px-6 py-4 bg-green-200 shadow overflow-hidden border-b border-gray-700 sm:rounded-sm '>
                           {el.body}
                         </td>
-                        <td onClick={()=> handleOpenModal(el)}>edit</td>
-                        <td onClick={() =>handleDeleteRow(el.id)}>delete</td>
+                        <td className='px-6 py-4  shadow overflow-hidden border-b border-gray-700 sm:rounded-sm '> <button onClick={()=> handleOpenModal(el)}>edit</button></td>
+                        <td className='px-6 py-4 shadow overflow-hidden border-b border-gray-700 sm:rounded-sm '> <button onClick={() =>handleDelete(el.id)}>delete</button></td>
                       </tr>
                     )
                   })}
@@ -59,7 +43,6 @@ const Table = (props) =>{
             </div>
           </div>
         </div>
-        {showModal && <Modal data={selectedRow}/>}
       </div>
     )
 }
