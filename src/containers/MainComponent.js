@@ -3,10 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "../redux/actions/postActions";
 import { createRow, deleteRow, getAllPosts, updateRow } from "../services/posts.service";
 import GridLayout from "./grid/GridLayout";
-import Modal from "./Modal";
+import Modal from './Modal'
+
 import Table from "./Table";
+import { Icon } from '@iconify/react'
 
 const MainComponent = ()=> {
+
+     
     //const reduxData = useSelector((state) => state.posts);
     const [tableData, setTableData] = useState([])
     const [showModal, setShowModal] = useState(false);
@@ -51,24 +55,58 @@ const MainComponent = ()=> {
         fetchData()
     },[]);
 
-    return(<div> 
-
-        <div className="flex justify-around">
-            <button 
-            onClick={()=>handleOpenModal(
-                {title: '',
-                body: '',
-                userId: 1})}>
-                    add
-                    </button>
-            <button onClick={()=> setToggle(!toggle)}>toggle</button>
-
+    return (
+      <div>
+        <div className='flex justify-around items-center mt-4 '>
+          <button
+           className='hover:bg-green-400'
+            onClick={() => handleOpenModal({ title: '', body: '', userId: 1 })}
+          >
+            <Icon
+              icon='carbon:face-activated-add'
+              color='gray'
+              width='36'
+              height='36'
+            />
+          </button>
+          <div class='relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in'>
+            <input
+              type='checkbox'
+              name='toggle'
+              id='toggle'
+              class='toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer'
+              onClick={() => setToggle(!toggle)}
+              checked={toggle}
+            />
+            <label
+              for='toggle'
+              class='toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer'
+            ></label>
+          </div>
         </div>
-        {toggle ? <GridLayout data={tableData}/> : 
-            <Table data={tableData} handleDelete={handleDeleteRow} handleOpenModal={handleOpenModal} /> 
-        }
-        {showModal && <Modal handleUpdate={handleUpdate} handleCreate={handleCreateRow} setShowModal={setShowModal} data={selectedRow}/>}
-    </div>)
+        {toggle ? (
+          <GridLayout
+            data={tableData}
+            handleDelete={handleDeleteRow}
+            handleOpenModal={handleOpenModal}
+          />
+        ) : (
+          <Table
+            data={tableData}
+            handleDelete={handleDeleteRow}
+            handleOpenModal={handleOpenModal}
+          />
+        )}
+        {showModal && (
+          <Modal
+            handleUpdate={handleUpdate}
+            handleCreate={handleCreateRow}
+            setShowModal={setShowModal}
+            data={selectedRow}
+          />
+        )}
+      </div>
+    )
 }
 
 export default MainComponent;
