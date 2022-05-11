@@ -1,54 +1,27 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "../redux/actions/postActions";
-import { createRow, deleteRow, getAllPosts, updateRow } from "../services/posts.service";
+import { setPosts, setSelectedPost } from "../redux/actions/postActions";
+import { getAllPosts } from "../services/posts.service";
 import GridLayout from "./grid/GridLayout";
 import Modal from './Modal'
 
 import Table from "./Table";
 import { Icon } from '@iconify/react'
+import { toggleModal } from "../redux/actions/modalAction";
 
 const MainComponent = ()=> {
-
-     
-    //const reduxData = useSelector((state) => state.posts);
-    const [tableData, setTableData] = useState([])
-    const [showModal, setShowModal] = useState(false);
-    const [selectedRow, setSelectedRow] = useState({});
+    const showModal = useSelector(state => state.modal.showModal)
     const [toggle, setToggle] = useState(false);
+    const dispatch = useDispatch();
 
     const handleOpenModal = (value) => {
-        setShowModal(!showModal);
-        setSelectedRow(value);
+        dispatch(setSelectedPost(value))
+        dispatch(toggleModal(!showModal))
     }
     
-    const dispatch = useDispatch();
     const fetchData = async () => {
         const res = await getAllPosts();
-        //dispatch(setPosts(res.data));
-        setTableData(res.data);
-    }
-
-    const handleDeleteRow = async (id) => {
-        await deleteRow(id);
-        let newData = tableData.filter((el) => el.id !== id);
-        setTableData(newData);
-    }
-
-    const handleUpdate = async (id, title, body) => {
-        const res = await updateRow(id, title, body);
-        debugger
-        setShowModal(false);
-        let index = tableData.findIndex((el)=>el.id === res.data.id);
-        let newData = tableData;
-        newData[index] = res.data;
-        setTableData(newData);
-    }
-
-    const handleCreateRow = async (title, body) =>{
-        const res = await createRow(title, body);
-        setShowModal(false)
-        setTableData([...tableData, res.data]);
+        dispatch(setPosts(res.data));
     }
 
     useEffect(()=>{
@@ -59,7 +32,6 @@ const MainComponent = ()=> {
       <div>
         <div className='flex justify-around items-center mt-4 '>
           <button
-           className='hover:bg-green-400'
             onClick={() => handleOpenModal({ title: '', body: '', userId: 1 })}
           >
             <Icon
@@ -86,24 +58,14 @@ const MainComponent = ()=> {
         </div>
         {toggle ? (
           <GridLayout
-            data={tableData}
-            handleDelete={handleDeleteRow}
             handleOpenModal={handleOpenModal}
           />
         ) : (
           <Table
-            data={tableData}
-            handleDelete={handleDeleteRow}
-            handleOpenModal={handleOpenModal}
           />
         )}
         {showModal && (
-          <Modal
-            handleUpdate={handleUpdate}
-            handleCreate={handleCreateRow}
-            setShowModal={setShowModal}
-            data={selectedRow}
-          />
+          <Modal />
         )}
       </div>
     )

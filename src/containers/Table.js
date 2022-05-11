@@ -1,7 +1,24 @@
 import { Icon } from '@iconify/react'
+import { useDispatch, useSelector } from 'react-redux'
+import { toggleModal } from '../redux/actions/modalAction';
+import { deletePostAction, setSelectedPost } from '../redux/actions/postActions';
+import { deleteRow } from '../services/posts.service';
 
-const Table = (props) => {
-  const { data, handleDelete, handleOpenModal } = props
+const Table = () => {
+
+  const data = useSelector((state) => state.allPosts.posts);
+  const showModal = useSelector((state) => state.modal.showModal);
+  const dispatch = useDispatch();
+
+  const handleDeleteRow = async (id) => {
+    await deleteRow(id);
+    dispatch(deletePostAction(id))
+}
+
+const handleOpenModal = (value) => {
+  dispatch(setSelectedPost(value))
+  dispatch(toggleModal(!showModal))
+}
 
   if (!data) return <div>no data</div>
   return (
@@ -48,7 +65,7 @@ const Table = (props) => {
                       </td>
                       <td className='px-6 py-4 shadow bg-white-50 overflow-hidden border-b border-gray-700 sm:rounded-sm '>
                         {' '}
-                        <button onClick={() => handleDelete(el.id)}>
+                        <button onClick={() => handleDeleteRow(el.id)}>
                           <Icon
                             icon='akar-icons:trash-can'
                             color='red'

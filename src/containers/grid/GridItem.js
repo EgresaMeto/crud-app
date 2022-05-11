@@ -1,7 +1,24 @@
 import { Icon } from '@iconify/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleModal } from '../../redux/actions/modalAction';
+import { deletePostAction, setSelectedPost } from '../../redux/actions/postActions';
+import { deleteRow } from '../../services/posts.service';
 
 const GridItem = (props) => {
-    const { id, title, body, handleDelete, handleOpenModal } = props
+    const showModal = useSelector((state) => state.modal.showModal);
+    const { id, title, body } = props
+    const dispatch = useDispatch();
+
+    const handleDeleteRow = async (id) => {
+      await deleteRow(id);
+      dispatch(deletePostAction(id))
+  }
+
+  const handleOpenModal = (value) => {
+    dispatch(setSelectedPost(value))
+    dispatch(toggleModal(!showModal))
+  }
+
     return (
       <div>
         <div className='flex w-full py-12 px-6 justify-center items-center '>
@@ -21,12 +38,12 @@ const GridItem = (props) => {
               <div>
                 <div className='flex items-center justify-between text-gray-800' >
                   <div className='w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center cursor-pointer'>
-                    <button onClick={() => handleOpenModal(id)}>
+                    <button onClick={() => handleOpenModal({id, title, body})}>
                       <Icon icon='clarity:edit-line' />
                     </button>
                   </div>
                   <div className='w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center cursor-pointer'>
-                    <button onClick={() => handleDelete(id)}>
+                    <button onClick={() => handleDeleteRow(id)}>
                       <Icon icon='akar-icons:trash-can' />
                     </button>
                   </div>
